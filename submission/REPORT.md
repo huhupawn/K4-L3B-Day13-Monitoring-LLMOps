@@ -169,7 +169,9 @@ Giữ đúng ba output text và năm ảnh dưới đây. Không tách thêm ả
 - **Điều quan trọng nhất đã học:**
   - Học được tư duy vận hành thực chiến của một kỹ sư LLMOps: Từ việc bảo vệ dữ liệu nhạy cảm của người dùng (PII scrubbing), quản lý chuỗi truy vết phân tán (distributed tracing với correlation ID), đến cách xây dựng hệ thống cảnh báo và xử lý sự cố có căn cứ dữ liệu rõ ràng.
 - **Hạn chế hoặc phần chưa hoàn thành, nếu có:**
-  - Các ảnh chụp Langfuse UI (`06` đến `10`, `14`) cần chụp trực tiếp từ giao diện trình duyệt của người dùng để phản ánh đúng màn hình hiển thị của Langfuse Cloud.
+  - Ba ảnh evidence `02-trace-list.png`, `03-incident-trace.png` và `04-prompt-versioning.png` phải được chụp trực tiếp từ giao diện Langfuse Cloud của project cá nhân `day13-k4-l3b-2A202602816` (trang Traces, trang Trace waterfall và trang Prompt versions). Vì các ảnh này phải phản ánh đúng màn hình hiển thị thật nên không thể sinh tự động bằng script, và tuyệt đối không được dùng ảnh từ project dùng chung hoặc của học viên khác.
+  - Dashboard 6 panel được dựng và kiểm chứng bằng `scripts/validate_dashboard.py` (6/6 hợp lệ theo contract `config/dashboard.yaml`); ảnh `05-dashboard-incident.png` chụp dashboard sau khi chạy challenge.
+  - Số liệu P50/P95/P99 trong báo cáo được tính trên tập log của lần chạy workload cá nhân, không phải trên dữ liệu production thật.
 
 ## 9. Checklist trước khi nộp
 
