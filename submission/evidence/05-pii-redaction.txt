@@ -1,0 +1,12 @@
+[REQUEST INPUT - Raw PII from User]:
+Query 1: "What is your refund policy? My email is student@vinuni.edu.vn"
+Query 5: "Here is my phone 0987654321, what should be logged?"
+Query 9: "What is the policy for PII and credit card 4111 1111 1111 1111?"
+
+--------------------------------------------------------------------------------
+[LOG OUTPUT - Redacted via app/pii.py & app/logging_config.py]:
+Line 2:  "payload": {"message_preview": "What is your refund policy? My email is [REDACTED_EMAIL]"}
+Line 10: "payload": {"message_preview": "Here is my phone [REDACTED_PHONE_VN], what should be logged?"}
+Line 18: "payload": {"message_preview": "What is the policy for PII and credit card [REDACTED_CREDIT_CARD]?"}
+
+Status: ALL PII SANITIZED BEFORE WRITING TO DISK (0 LEAKS DETECTED)

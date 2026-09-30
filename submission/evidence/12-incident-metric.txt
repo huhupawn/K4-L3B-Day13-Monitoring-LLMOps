@@ -1,0 +1,10 @@
+[INCIDENT DETECTED VIA METRICS]:
+Incident Type: High Latency Degradation (SLO Breach)
+Time Window:   2026-09-30 04:15:00 UTC - 04:30:00 UTC
+Affected SLI:  Latency P95 of response_sent
+
+Normal Baseline P95 Latency:  157.1 ms
+Current Incident P95 Latency: 2,545.4 ms  (SPIKE > 16x)
+Primary SLO Target Threshold: <= 3,000 ms
+
+Impact: Tail latency increased sharply, nearing SLO limit due to backend bottleneck.
