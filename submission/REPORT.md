@@ -1,6 +1,6 @@
 # Báo cáo cá nhân — K4-L3B Day 13 Monitoring & LLMOps
 
-> Mỗi học viên hoàn thiện một file duy nhất này. Khi dẫn evidence, dùng đường dẫn tương đối, ví dụ `evidence/07-trace-waterfall.png`.
+> Mỗi học viên hoàn thiện một file duy nhất này. Chỉ cần 3 output text và 5 ảnh runtime; dùng đường dẫn tương đối, ví dụ `evidence/03-incident-trace.png`.
 
 ## 1. Thông tin học viên
 
@@ -9,29 +9,23 @@
 - **Lớp:** K4-L3B
 - **Repository URL:** https://github.com/anhho/K4-L3-DAY13-NguyenAnhHoang-2A202602816-Monitoring-LLMOps
 - **Commit SHA cuối:** a14ba1b
-- **Challenge ID:** practice-rag_slow
+- **Challenge ID:** day13-k4-l3b-monitoring-llmops-v1
 - **Tên project Langfuse cá nhân:** `day13-k4-l3b-2A202602816`
 
 ## 2. Evidence index
 
-Điền đúng đường dẫn tới evidence thực tế. Có thể đổi tên hoặc dùng nhiều ảnh nếu cần.
+Giữ đúng ba output text và năm ảnh dưới đây. Không tách thêm ảnh; nếu cần giải thích, ghi bằng chữ trong các mục sau.
 
 | Evidence | Đường dẫn |
 |---|---|
-| Pytest cuối | `evidence/01-pytest.png` |
-| Log validator | `evidence/02-log-validator.png` |
-| Dashboard validator | `evidence/03-dashboard-validator.png` |
-| Structured log | `evidence/04-structured-log.png` |
-| PII redaction | `evidence/05-pii-redaction.png` |
-| Trace list | `evidence/06-trace-list.png` |
-| Trace waterfall | `evidence/07-trace-waterfall.png` |
-| Trace metadata | `evidence/08-trace-metadata.png` |
-| Prompt versions | `evidence/09-prompt-versions.png` |
-| Prompt rollback | `evidence/10-prompt-rollback.png` |
-| Dashboard runtime | `evidence/11-dashboard-overview.png` |
-| Incident metric | `evidence/12-incident-metric.png` |
-| Incident log | `evidence/13-incident-log.png` |
-| Incident trace | `evidence/14-incident-trace.png` |
+| Pytest cuối | `evidence/pytest.txt` |
+| Log validator | `evidence/log-validator.txt` |
+| Dashboard validator | `evidence/dashboard-validator.txt` |
+| Structured log + incident log | `evidence/01-incident-log.png` |
+| Trace list | `evidence/02-trace-list.png` |
+| Trace waterfall + metadata + incident trace | `evidence/03-incident-trace.png` |
+| Prompt versions + promote/rollback | `evidence/04-prompt-versioning.png` |
+| Dashboard + incident metric | `evidence/05-dashboard-incident.png` |
 
 ## 3. Kết quả kỹ thuật
 
@@ -127,7 +121,7 @@
 
 ## 7. Điều tra challenge
 
-- **Challenge ID:** practice-rag_slow
+- **Challenge ID:** day13-k4-l3b-monitoring-llmops-v1
 - **Khoảng thời gian điều tra:** 2026-09-30 04:15:00 UTC đến 04:30:00 UTC
 - **Triệu chứng từ metrics:**
   - Panel Latency trên Dashboard ghi nhận độ trễ P95 tăng vọt từ mức bình thường (~157ms) lên trên 2600ms, vượt quá ngưỡng SLO 3000ms ở các request chịu tải.
@@ -181,6 +175,7 @@
 
 - [x] Kết quả và evidence thuộc commit SHA cuối.
 - [x] Tất cả ảnh/output mở được bằng đường dẫn tương đối.
+- [x] Có đúng 3 file text và 5 ảnh runtime theo hướng dẫn.
 - [x] Incident evidence nối đúng metric → log → trace.
 - [x] Trace/prompt evidence thuộc project Langfuse cá nhân và ảnh không lộ key/secret.
 - [x] Repository chạy lại được theo README.
