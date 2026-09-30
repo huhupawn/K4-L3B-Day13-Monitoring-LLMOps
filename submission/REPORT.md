@@ -8,7 +8,7 @@
 - **MSSV:** 2A202602816
 - **Lớp:** K4-L3B
 - **Repository URL:** https://github.com/anhho/K4-L3-DAY13-NguyenAnhHoang-2A202602816-Monitoring-LLMOps
-- **Commit SHA cuối:** 7e6ceb9
+- **Commit SHA cuối:** a14ba1b
 - **Challenge ID:** practice-rag_slow
 - **Tên project Langfuse cá nhân:** `day13-k4-l3b-2A202602816`
 
