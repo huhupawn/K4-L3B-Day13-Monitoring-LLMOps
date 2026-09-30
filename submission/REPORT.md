@@ -34,7 +34,7 @@ Giữ đúng ba output text và năm ảnh dưới đây. Không tách thêm ả
 | `validate_logs.py` | 30/100 | 100/100 | Đạt toàn bộ 4/4 tiêu chí: schema, correlation ID, enrichment, PII scrubbing |
 | `validate_dashboard.py` | 6/6 panel | 6/6 panel | Hợp lệ toàn bộ 6 panel theo chuẩn contract của config/dashboard.yaml |
 | `pytest` | 22 passed | 24 passed | Bổ sung test kiểm thử che giấu CCCD và Credit Card, 100% tests pass |
-| Số traces hợp lệ | 0 | 13 traces | Đầy đủ cây phân cấp: root agent, child retriever và child generation |
+| Số traces hợp lệ | 0 | 64 traces (10 trên prompt v2) | Đầy đủ cây phân cấp: root agent, child retriever và child generation; 53 trace v1 + 10 trace v2 |
 | Số PII leak | 0 | 0 | Không còn rò rỉ dữ liệu nhạy cảm (email, SĐT, CCCD, thẻ) trong logs.jsonl |
 | Latency P95 / TTFT P95 | 734.5ms / 50ms | 157.1ms / 50ms | Độ trễ ổn định ở trạng thái bình thường; TTFT duy trì ở mức ~50ms |
 | Retrieval success rate | 100% | 100% | Retrieval tìm kiếm ngữ cảnh thành công cho mọi câu hỏi trong corpus |
@@ -79,9 +79,11 @@ Giữ đúng ba output text và năm ảnh dưới đây. Không tách thêm ả
 - **Version/label baseline:** Version 1, labels: `baseline`, `production`
 - **Version/label candidate:** Version 2, labels: `candidate`
 - **Trace ID của mỗi version:**
-  - Trace dùng Prompt Version 1 (`baseline`): `00e3338a910c0f3459cc4a60a084fef0` (correlation_id: `req-c55d772e`)
-  - Trace dùng Prompt Version 2 (`candidate`): `6122bff2fbaa2990c9a7fa122012e449` (correlation_id: `req-ebb16cd8`)
-  - Trace sau khi rollback về Version 1: `6b058e60f20ebb9980c8cc812cbe5a2e` (correlation_id: `req-9da13862`)
+  - Baseline, label `baseline` → v1: `00e3338a910c0f3459cc4a60a084fef0`
+  - Candidate, label `candidate` → v2: `6122bff2fbaa2990c9a7fa122012e449`
+  - **Promote**: đổi label `production` sang v2, chạy workload lúc **05:20:10 UTC** → 10 trace với `prompt_version=2`. Trace đại diện: `27b4902401bd690e477273432fa1eb6f`.
+  - **Rollback**: đổi label `production` về v1, chạy lại workload lúc **05:23:58 UTC** → 10 trace với `prompt_version=1`. Trace đại diện: `ff58c6fa51101aa41c8c94df5942e592`.
+  - Bằng chứng đo được của vòng promote/rollback: `tokens_in` trung bình **33 (v1) → 56 (v2) → 34 (sau rollback)**, vì v2 thêm tiền tố "Answer in no more than three concise bullet points." vào prompt.
 - **Cách promote và rollback `production`:**
   - **Promote:** Trên Langfuse UI (hoặc qua SDK method `client.update_prompt(name='day13-chat', version=2, new_labels=['candidate', 'production'])`), ta chuyển nhãn `production` từ Version 1 sang Version 2. Ứng dụng production gọi `client.get_prompt("day13-chat", label="production")` sẽ tự động nhận prompt Version 2 mà không cần sửa đổi mã nguồn.
   - **Rollback:** Khi phát hiện Version 2 có hiện tượng suy giảm chất lượng, tăng đột biến chi phí hoặc độ trễ, ta thực hiện rollback tức thì bằng cách chuyển nhãn `production` quay trở về Version 1 (`client.update_prompt(name='day13-chat', version=1, new_labels=['baseline', 'production'])`). Ứng dụng lập tức phục hồi phiên bản prompt an toàn.
@@ -133,7 +135,7 @@ Giữ đúng ba output text và năm ảnh dưới đây. Không tách thêm ả
     ```
   - Correlation ID đại diện: `req-4193d0a4`
 - **Trace ID và span gây ảnh hưởng:**
-  - Trace ID: `3248f4e063206c1a6e875c1b1f8e91b2` (nối với log bằng `correlation_id: req-4193d0a4`).
+  - Trace ID: `262bfa77df3682bd4bacb85ac7bb2098` (nối với log bằng `correlation_id: req-4193d0a4`, session `k4-l3b-challenge-s05`).
   - Phân tích Waterfall trên Langfuse:
     - Span `lab-agent-run`: Tổng thời gian 2,651ms (2.651s).
     - Span con `retrieval`: Chiếm **2,500ms (2.5s)** (tương đương 94.3% tổng thời gian).
