@@ -122,27 +122,27 @@ Giữ đúng ba output text và năm ảnh dưới đây. Không tách thêm ả
 ## 7. Điều tra challenge
 
 - **Challenge ID:** day13-k4-l3b-monitoring-llmops-v1
-- **Khoảng thời gian điều tra:** 2026-09-30 04:15:00 UTC đến 04:30:00 UTC
+- **Khoảng thời gian điều tra:** 2026-09-30 04:35:00 UTC đến 04:40:00 UTC
 - **Triệu chứng từ metrics:**
-  - Panel Latency trên Dashboard ghi nhận độ trễ P95 tăng vọt từ mức bình thường (~157ms) lên trên 2600ms, vượt quá ngưỡng SLO 3000ms ở các request chịu tải.
-  - Panel Traffic và Errors không đổi, nhưng thời gian phản hồi toàn hệ thống bị chậm rõ rệt.
+  - Panel Latency trên Dashboard ghi nhận độ trễ P95 tăng vọt từ mức bình thường (~157ms) lên trên 2650ms khi chịu tải đồng thời (vượt ngưỡng threshold cảnh báo).
+  - Panel Traffic tăng theo luồng challenge, Panel Errors giữ ở mức bình thường (không có lỗi 500 do service vẫn trả 200), nhưng thời gian phản hồi toàn hệ thống bị chậm rõ rệt ở tính năng `monitoring`.
 - **Log line và correlation ID liên quan:**
   - Log event `response_sent`:
     ```json
-    {"service": "api", "latency_ms": 2545, "ttft_ms": 50, "tokens_in": 36, "tokens_out": 129, "cost_usd": 0.002043, "quality_score": 0.9, "tool_name": "retrieval", "tool_success": true, "event": "response_sent", "correlation_id": "req-e3abe91f", "ts": "2026-09-30T04:28:10Z"}
+    {"service": "api", "latency_ms": 2651, "ttft_ms": 50, "tokens_in": 35, "tokens_out": 162, "cost_usd": 0.002535, "quality_score": 0.8, "tool_name": "retrieval", "tool_success": true, "event": "response_sent", "session_id": "k4-l3b-challenge-s05", "model": "claude-sonnet-4-5", "feature": "monitoring", "env": "dev", "user_id_hash": "68e37dc7cb5e", "correlation_id": "req-4193d0a4", "level": "info", "ts": "2026-09-30T04:37:35.372839Z"}
     ```
-  - Correlation ID đại diện: `req-e3abe91f`
+  - Correlation ID đại diện: `req-4193d0a4`
 - **Trace ID và span gây ảnh hưởng:**
-  - Trace ID: `5638d3dba3afeae2e98f01152de8cb11` (nối với log bằng `correlation_id: req-e3abe91f`).
+  - Trace ID: `3248f4e063206c1a6e875c1b1f8e91b2` (nối với log bằng `correlation_id: req-4193d0a4`).
   - Phân tích Waterfall trên Langfuse:
-    - Span `lab-agent-run`: Tổng thời gian 2,545ms.
-    - Span con `retrieval`: Chiếm **2,500ms** (tương đương 98% tổng thời gian).
-    - Span con `generation`: Chỉ mất **150ms** (TTFT 50ms).
+    - Span `lab-agent-run`: Tổng thời gian 2,651ms (2.651s).
+    - Span con `retrieval`: Chiếm **2,500ms (2.5s)** (tương đương 94.3% tổng thời gian).
+    - Span con `generation`: Chỉ mất **151ms (0.151s)** (TTFT 50ms).
   - Span gây chậm: `retrieval`.
 - **Root cause:**
-  - Bước truy xuất tài liệu `retrieve()` bị tắc nghẽn do vector database phản hồi chậm (mô phỏng bởi cờ sự cố `STATE["rag_slow"] = True` làm trễ 2.5s khi tìm kiếm tài liệu).
+  - Bước truy xuất tài liệu `retrieve()` bị tắc nghẽn do vector database phản hồi chậm (mô phỏng bởi cờ sự cố `STATE["rag_slow"] = True` trong official challenge `day13-k4-l3b-monitoring-llmops-v1`, làm trễ 2.5s khi tìm kiếm tài liệu).
 - **Fix action:**
-  - Vô hiệu hóa sự cố hoặc khôi phục kết nối vector store (`python scripts/inject_incident.py --scenario rag_slow --disable`).
+  - Vô hiệu hóa sự cố hoặc khôi phục kết nối vector store (`python scripts/inject_incident.py --disable`).
   - Thêm timeout ngắn (ví dụ 1.5s) cho bước retrieval và áp dụng fallback sang corpus bộ nhớ đệm (cached context) khi vector store quá tải.
 - **Preventive measure:**
   - Bổ sung cảnh báo `RetrievalLatencyP95 > 1500ms` để phát hiện suy giảm hiệu năng vector store trước khi ảnh hưởng đến người dùng cuối.
